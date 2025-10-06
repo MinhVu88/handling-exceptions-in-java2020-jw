@@ -1,13 +1,9 @@
-package main.java.com.pluralsight.handlingexceptions.sec3;
+package main.java.com.pluralsight.jimwilson.sec2;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.IOException;
 
-import main.java.com.pluralsight.handlingexceptions.sec2.MathOperation;
-
-public class HandlingMultipleExceptions {
+public class ImplementingTryCatchFinally {
 	private static void performOperation(String inputLine) {
 		String[] parts = inputLine.split(" ");
 
@@ -72,18 +68,28 @@ public class HandlingMultipleExceptions {
 	}
 
 	public static void main(String[] args) {
+		BufferedReader file = null;
+
 		String inputLine;
 
-		try(
-			BufferedReader file = new BufferedReader(new FileReader(args[0]))
-		) {
+		try {
+			file = new BufferedReader(new FileReader(args[0]));
+
 			while((inputLine = file.readLine()) != null) {
 				performOperation(inputLine);
 			}
-		}catch(FileNotFoundException e) {
-			System.out.println("Error: " + args[0] + " not found");
-		}catch(IOException e) {
+		}catch(Exception e) {
 			System.out.println("Error: " + e.getMessage());
+		}finally {
+			try {
+				if(file != null) {
+					System.out.println(args[0] + " is closed");
+
+					file.close();
+				}
+			}catch(Exception e) {
+				System.out.println("Error: can't close " + args[0]);
+			}
 		}
 	}
 }

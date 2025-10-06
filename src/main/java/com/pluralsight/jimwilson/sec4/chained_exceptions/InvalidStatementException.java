@@ -1,4 +1,4 @@
-package main.java.com.pluralsight.handlingexceptions.sec4.chained_exceptions;
+package main.java.com.pluralsight.jimwilson.sec4.chained_exceptions;
 
 public class InvalidStatementException extends Exception {
 	public InvalidStatementException(String message) {

@@ -1,11 +1,11 @@
-package main.java.com.pluralsight.handlingexceptions.sec3;
+package main.java.com.pluralsight.jimwilson.sec3;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import main.java.com.pluralsight.handlingexceptions.sec2.MathOperation;
+import main.java.com.pluralsight.jimwilson.sec2.MathOperation;
 
 public class HandlingUncheckedExceptions {
 	private static void performOperation(String inputLine) {

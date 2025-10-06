@@ -1,24 +1,34 @@
-package main.java.com.pluralsight.handlingexceptions.sec4;
+package main.java.com.pluralsight.jimwilson.sec4.chained_exceptions;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-import main.java.com.pluralsight.handlingexceptions.sec2.MathOperation;
+import main.java.com.pluralsight.jimwilson.sec2.MathOperation;
 
-public class ThrowingAnException {
-	private static void performOperation(String inputLine)  {
-		String[] parts = inputLine.split(" ");
+public class Main {
+	private static void performOperation(String inputLine) throws InvalidStatementException {
+		try {
+			String[] parts = inputLine.split(" ");
 
-		MathOperation operation = MathOperation.valueOf(parts[0].toUpperCase());
+			if(parts.length != 3) {
+				throw new InvalidStatementException("3 parts required: operation | leftVal | rightVal");
+			}
 
-		int leftVal = valueFromWord(parts[1]);
-		int rightVal = valueFromWord(parts[2]);
+			MathOperation operation = MathOperation.valueOf(parts[0].toUpperCase());
 
-		int result = execute(operation, leftVal, rightVal);
+			int leftVal = valueFromWord(parts[1]);
+			int rightVal = valueFromWord(parts[2]);
 
-		System.out.println(inputLine + " = " + result);
+			int result = execute(operation, leftVal, rightVal);
+
+			System.out.println(inputLine + " = " + result);
+		}catch(InvalidStatementException e) {
+			throw e;
+		}catch(Exception e) {
+			throw new InvalidStatementException("Error processing statement", e);
+		}
 	}
 
 	static int execute(MathOperation operation, int leftVal, int rightVal) {
@@ -76,7 +86,7 @@ public class ThrowingAnException {
 		return value;
 	}
 
-	private static void processFile(BufferedReader file) throws IOException {
+	private static void processFile(BufferedReader file) throws IOException, InvalidStatementException {
 		String inputLine;
 
 		while((inputLine = file.readLine()) != null) {
@@ -93,6 +103,14 @@ public class ThrowingAnException {
 			System.out.println("Error: " + args[0] + " not found");
 		}catch(IOException e) {
 			System.out.println("Error: " + e.getMessage());
+		}catch(InvalidStatementException e) {
+			System.out.println("Error: " + e.getMessage());
+
+			// if getCause returns a non-null value, that means there's another exception wrapped within InvalidStatementException
+			// because getCause returns a reference to that wrapped exception
+			if(e.getCause() != null) {
+				System.out.println(" caused by " + e.getCause());
+			}
 		}catch(Exception e) {
 			System.out.println("Error: " + e.getMessage());
 		}

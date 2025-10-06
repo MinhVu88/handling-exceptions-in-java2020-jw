@@ -1,4 +1,4 @@
-package main.java.com.pluralsight.handlingexceptions.sec5;
+package main.java.com.pluralsight.jimwilson.sec5;
 
 public class InvalidStatementException extends Exception {
 	public InvalidStatementException(String message) {

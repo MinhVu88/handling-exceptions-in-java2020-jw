@@ -1,11 +1,19 @@
-package main.java.com.pluralsight.handlingexceptions.sec2;
+package main.java.com.pluralsight.jimwilson.sec4.custom_exceptions;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 
-public class ImplementingTryCatchFinally {
-	private static void performOperation(String inputLine) {
+import main.java.com.pluralsight.jimwilson.sec2.MathOperation;
+
+public class Main {
+	private static void performOperation(String inputLine) throws InvalidStatementException {
 		String[] parts = inputLine.split(" ");
+
+		if(parts.length != 3) {
+			throw new InvalidStatementException("3 parts required: operation | leftVal | rightVal");
+		}
 
 		MathOperation operation = MathOperation.valueOf(parts[0].toUpperCase());
 
@@ -31,7 +39,12 @@ public class ImplementingTryCatchFinally {
 				result = leftVal * rightVal;
 				break;
 			case DIVIDE:
+				if(rightVal == 0) {
+					throw new IllegalArgumentException("zero rightVal not permitted with divide operation");
+				}
+
 				result = leftVal / rightVal;
+
 				break;
 			default:
 				System.out.println("invalid value: " + operation);
@@ -67,29 +80,27 @@ public class ImplementingTryCatchFinally {
 		return value;
 	}
 
-	public static void main(String[] args) {
-		BufferedReader file = null;
-
+	private static void processFile(BufferedReader file) throws IOException, InvalidStatementException {
 		String inputLine;
 
-		try {
-			file = new BufferedReader(new FileReader(args[0]));
+		while((inputLine = file.readLine()) != null) {
+			performOperation(inputLine);
+		}
+	}
 
-			while((inputLine = file.readLine()) != null) {
-				performOperation(inputLine);
-			}
+	public static void main(String[] args) {
+		try(
+			BufferedReader file = new BufferedReader(new FileReader(args[0]))
+		) {
+			processFile(file);
+		}catch(FileNotFoundException e) {
+			System.out.println("Error: " + args[0] + " not found");
+		}catch(IOException e) {
+			System.out.println("Error: " + e.getMessage());
+		}catch(InvalidStatementException e) {
+			System.out.println("Error: " + e.getMessage());
 		}catch(Exception e) {
 			System.out.println("Error: " + e.getMessage());
-		}finally {
-			try {
-				if(file != null) {
-					System.out.println(args[0] + " is closed");
-
-					file.close();
-				}
-			}catch(Exception e) {
-				System.out.println("Error: can't close " + args[0]);
-			}
 		}
 	}
 }

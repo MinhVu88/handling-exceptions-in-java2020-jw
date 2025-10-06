@@ -1,4 +1,4 @@
-package main.java.com.pluralsight.handlingexceptions.sec2;
+package main.java.com.pluralsight.jimwilson.sec2;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
